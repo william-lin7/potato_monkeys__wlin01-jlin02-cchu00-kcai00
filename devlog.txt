@@ -1,0 +1,3 @@
+linJef // 2020-05-04
+Connected reliant JS scripts to HTML and JSON data to Flask app
+Added basic choropleth map from JS tutorials
