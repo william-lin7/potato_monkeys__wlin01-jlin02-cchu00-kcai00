@@ -39,3 +39,5 @@ function ready(error, topo) {
         return colorScale(d.total);
       });
     }
+
+console.log(info['Countries']);

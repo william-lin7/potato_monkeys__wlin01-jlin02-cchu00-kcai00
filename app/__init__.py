@@ -14,12 +14,13 @@ def getdata():
     u = urllib.request.urlopen("https://api.covid19api.com/summary")
     response = u.read()
     data = json.loads(response)
-    print(data['Countries'][0].keys())
+    # print(data['Countries'][0])
+    return data
 
 @app.route("/")
 def root():
-    getdata()
-    return render_template('index.html')
+    data = getdata()
+    return render_template('index.html', data = data)
 
 if __name__ == "__main__":
     app.debug = True
