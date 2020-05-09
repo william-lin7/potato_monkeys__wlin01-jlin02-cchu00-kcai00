@@ -68,7 +68,6 @@ d3.queue()
   };
 
 function ready(error, topo, ohno) {
-  console.log(topo);
   if (error) throw error;
   var dict = {};
   for (var i = 0; i < ohno.length; i++) {data.set(ohno[i].alpha_3, ohno[i].alpha_2);};
@@ -78,7 +77,6 @@ function ready(error, topo, ohno) {
       dict[info['Countries'][i]['CountryCode']] = info['Countries'][i]['TotalConfirmed'];
       // console.log(info);
   }
-  console.log(dict);
   // Draw the map
   svg.append("g")
     .selectAll("path")
@@ -96,7 +94,7 @@ function ready(error, topo, ohno) {
       })
       .call(d3.helper.tooltip(
         function(d, i){
-          console.log(d);
+          // console.log(d);
           return "<b>"+ dict[data.get(d.id)]+ "</b>";
         }
         ));
