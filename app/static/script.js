@@ -29,18 +29,61 @@ d3.queue()
   // .defer(d3.csv, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", function(d) { data.set(d.code, +d.pop); })
   .await(ready);
 
+  d3.helper = {};
+  d3.helper.tooltip = function(accessor){
+      return function(selection){
+          var tooltipDiv;
+          var bodyNode = d3.select('body').node();
+          selection.on("mouseover", function(d, i){
+              // Clean up lost tooltips
+              d3.select('body').selectAll('div.tooltip').remove();
+              // Append tooltip
+              tooltipDiv = d3.select('body').append('div').attr('class', 'tooltip');
+              var absoluteMousePos = d3.mouse(bodyNode);
+              tooltipDiv.style('left', (absoluteMousePos[0] + 10)+'px')
+                  .style('top', (absoluteMousePos[1] - 15)+'px')
+                  .style('position', 'absolute')
+                  .style('z-index', 1001)
+                  .style('opacity', 1);
+              // Add text using the accessor function
+              var tooltipText = 'Hi'|| accessor(d, i) || 'Hi';
+              // Crop text arbitrarily
+              //tooltipDiv.style('width', function(d, i){return (tooltipText.length > 80) ? '300px' : null;})
+              //    .html(tooltipText);
+          })
+          .on('mousemove', function(d, i) {
+              // Move tooltip
+              var absoluteMousePos = d3.mouse(bodyNode);
+              tooltipDiv.style('left', (absoluteMousePos[0] + 10)+'px')
+                  .style('top', (absoluteMousePos[1] - 15)+'px');
+              var tooltipText = accessor(d, i) || '';
+              tooltipDiv.html(tooltipText);
+          })
+          .on("mouseout", function(d, i){
+              // Remove tooltip
+              tooltipDiv.remove();
+          });
+
+      };
+  };
+
 function ready(error, topo, ohno) {
-  // console.log(ohno);
-  for (var i = 0; i < ohno.length; i++) {data.set(ohno[i].alpha_3, ohno[i].alpha_2)};
+  console.log(topo);
+  if (error) throw error;
+  var dict = {};
+  for (var i = 0; i < ohno.length; i++) {data.set(ohno[i].alpha_3, ohno[i].alpha_2);};
   for (var i = 0; i < info['Countries'].length; i++) {
       data.set(info['Countries'][i]['CountryCode'], +info['Countries'][i]['TotalConfirmed']);
+      // arr.push(info['Countries'][i]['TotalConfirmed']);
+      dict[info['Countries'][i]['CountryCode']] = info['Countries'][i]['TotalConfirmed'];
+      // console.log(info);
   }
+  console.log(dict);
   // Draw the map
   svg.append("g")
     .selectAll("path")
     .data(topo.features)
-    .enter()
-    .append("path")
+    .enter().insert("path")
       // draw each country
       .attr("d", d3.geoPath()
         .projection(projection)
@@ -50,7 +93,15 @@ function ready(error, topo, ohno) {
         // console.log(data.get(d.id));
         d.total = data.get(data.get(d.id)) || 0;
         return colorScale(d.total);
-      });
+      })
+      .call(d3.helper.tooltip(
+        function(d, i){
+          console.log(d);
+          return "<b>"+ dict[data.get(d.id)]+ "</b>";
+        }
+        ));
+      svg.insert("path")
+          .datum(topojson.mesh(topo.features, function(a, b) { return a.id !== b.id; }))
+          .attr("class", "boundary")
+          .attr("d", path);
     }
-
-// console.log(info);
