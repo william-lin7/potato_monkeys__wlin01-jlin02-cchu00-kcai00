@@ -93,7 +93,6 @@ d3.queue()
   };
 
 function ready(error, topo, ohno) {
-  if (error) throw error;
   for (var i = 0; i < ohno.length; i++) {
     data.set(ohno[i].alpha_3, ohno[i].alpha_2);
   }

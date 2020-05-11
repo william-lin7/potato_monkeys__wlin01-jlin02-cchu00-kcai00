@@ -18,8 +18,12 @@ def getdata():
 
 @app.route("/")
 def root():
-    data = getdata()
-    return render_template('index.html', data = data)
+    try:
+        data = getdata()
+    except:
+        return render_template('error.html')
+    return render_template('index.html', data = data, updated = data['Date'])
+
 
 if __name__ == "__main__":
     app.debug = True
