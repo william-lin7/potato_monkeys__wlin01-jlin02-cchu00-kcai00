@@ -1,4 +1,4 @@
-#Covid Tingz by potato_monkeys
+# Covid Tingz by potato_monkeys
 
 ROSTER
 William Lin - Project Manager
