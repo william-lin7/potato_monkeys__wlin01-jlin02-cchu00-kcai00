@@ -29,7 +29,7 @@ for (var i = 0; i < Object.keys(globaldata).length; i++){
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
   // .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
-  .domain([10, 100, 1000, 30000, 100000, 5000000])
+  .domain([10, 100, 1000, 30000, 100000, 1000000])
   .range(d3.schemeReds[7]);
 
 // Load external data and boot
