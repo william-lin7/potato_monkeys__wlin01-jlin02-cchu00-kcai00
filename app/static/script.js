@@ -1,4 +1,5 @@
 var format = d3.format(",");
+var dict = {};
 
 var margin = {top: 0, right: 0, bottom: 0, left: 0},
             width = 960 - margin.left - margin.right,
@@ -20,6 +21,7 @@ var countrytable = document.getElementById('countrytable');
 countrytable.rows[0].cells[0].innerHTML = 'Global';
 var globaldata = info['Global'];
 for (var i = 0; i < Object.keys(globaldata).length; i++){
+  console.log(globaldata[Object.keys(globaldata)[i]]);
   countrytable.rows[i+1].cells[1].innerHTML = globaldata[Object.keys(globaldata)[i]];
 }
 
@@ -54,14 +56,28 @@ d3.queue()
                   .style('z-index', 1001)
                   .style('opacity', 1);
               // Add text using the accessor function
-              var tooltipText = accessor(d, i);
+              var tooltipText = accessor(d, i)[0];
+              countrytable.rows[0].cells[0].innerHTML = accessor(d, i)[0];
+              var countrydata = dict[data.get(accessor(d, i)[1])];
+              // console.log(countrydata);
+              if (typeof countrydata !== 'undefined') {
+                for (var i = 3; i < Object.keys(countrydata).length - 1; i++){
+                  countrytable.rows[i-2].cells[1].innerHTML = countrydata[Object.keys(countrydata)[i]];
+                }
+              }
+              else {
+                  for (var i = 0; i < countrytable.rows.length - 1; i++){
+                    countrytable.rows[i+1].cells[1].innerHTML = "N/A";
+                }
+              }
+              // console.log(accessor(d, i));
           })
           .on('mousemove', function(d, i) {
               // Move tooltip
               var absoluteMousePos = d3.mouse(bodyNode);
               tooltipDiv.style('left', (absoluteMousePos[0] + 25) + 'px')
                   .style('top', (absoluteMousePos[1] + 5) + 'px');
-              var tooltipText = accessor(d, i) || '';
+              var tooltipText = accessor(d, i)[0] || '';
               tooltipDiv.html(tooltipText);
           })
           .on("mouseout", function(d, i){
@@ -78,7 +94,6 @@ d3.queue()
 
 function ready(error, topo, ohno) {
   if (error) throw error;
-  var dict = {};
   for (var i = 0; i < ohno.length; i++) {
     data.set(ohno[i].alpha_3, ohno[i].alpha_2);
   }
@@ -105,7 +120,8 @@ function ready(error, topo, ohno) {
       })
       .call(d3.helper.tooltip(
         function(d, i){
-          return "<b>" + dict[data.get(d.id)]['Country'] + "</b>";
+          if (typeof d.properties !== 'undefined') return ["<b>" + d.properties.name + "</b>", d.id];
+          else return "<b> N/A </b>";
         }
         ));
       svg.insert("path")
