@@ -14,7 +14,6 @@ def getdata():
     u = urllib.request.urlopen("https://api.covid19api.com/summary")
     response = u.read()
     data = json.loads(response)
-    # print(data['Countries'][0])
     return data
 
 @app.route("/")

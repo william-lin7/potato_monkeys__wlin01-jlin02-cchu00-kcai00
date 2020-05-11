@@ -15,12 +15,20 @@ var projection = d3.geoNaturalEarth()
     .scale(width / 1.7 / Math.PI)
     .translate([width / 2, height / 2])
 
+// Chart of Cases
+var countrytable = document.getElementById('countrytable');
+countrytable.rows[0].cells[0].innerHTML = 'Global';
+var globaldata = info['Global'];
+for (var i = 0; i < Object.keys(globaldata).length; i++){
+  countrytable.rows[i+1].cells[1].innerHTML = globaldata[Object.keys(globaldata)[i]];
+}
+
 // Data and color scale
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
   // .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
   .domain([10, 100, 1000, 30000, 100000, 5000000])
-  .range(d3.schemeBlues[7]);
+  .range(d3.schemeReds[7]);
 
 // Load external data and boot
 d3.queue()
@@ -40,27 +48,28 @@ d3.queue()
               // Append tooltip
               tooltipDiv = d3.select('body').append('div').attr('class', 'tooltip');
               var absoluteMousePos = d3.mouse(bodyNode);
-              tooltipDiv.style('left', (absoluteMousePos[0] + 10)+'px')
-                  .style('top', (absoluteMousePos[1] - 15)+'px')
+              tooltipDiv.style('left', (absoluteMousePos[0] + 25) +'px')
+                  .style('top', (absoluteMousePos[1] + 5) +'px')
                   .style('position', 'absolute')
                   .style('z-index', 1001)
                   .style('opacity', 1);
               // Add text using the accessor function
-              var tooltipText = 'Hi'|| accessor(d, i) || 'Hi';
-              // Crop text arbitrarily
-              //tooltipDiv.style('width', function(d, i){return (tooltipText.length > 80) ? '300px' : null;})
-              //    .html(tooltipText);
+              var tooltipText = accessor(d, i);
           })
           .on('mousemove', function(d, i) {
               // Move tooltip
               var absoluteMousePos = d3.mouse(bodyNode);
-              tooltipDiv.style('left', (absoluteMousePos[0] + 10)+'px')
-                  .style('top', (absoluteMousePos[1] - 15)+'px');
+              tooltipDiv.style('left', (absoluteMousePos[0] + 25) + 'px')
+                  .style('top', (absoluteMousePos[1] + 5) + 'px');
               var tooltipText = accessor(d, i) || '';
               tooltipDiv.html(tooltipText);
           })
           .on("mouseout", function(d, i){
               // Remove tooltip
+              countrytable.rows[0].cells[0].innerHTML = 'Global';
+              for (var i = 0; i < Object.keys(globaldata).length; i++){
+                countrytable.rows[i+1].cells[1].innerHTML = globaldata[Object.keys(globaldata)[i]];
+              }
               tooltipDiv.remove();
           });
 
@@ -70,11 +79,13 @@ d3.queue()
 function ready(error, topo, ohno) {
   if (error) throw error;
   var dict = {};
-  for (var i = 0; i < ohno.length; i++) {data.set(ohno[i].alpha_3, ohno[i].alpha_2);};
+  for (var i = 0; i < ohno.length; i++) {
+    data.set(ohno[i].alpha_3, ohno[i].alpha_2);
+  }
   for (var i = 0; i < info['Countries'].length; i++) {
-      data.set(info['Countries'][i]['CountryCode'], +info['Countries'][i]['TotalConfirmed']);
+      data.set(info['Countries'][i]['CountryCode'], info['Countries'][i]['TotalConfirmed']);
       // arr.push(info['Countries'][i]['TotalConfirmed']);
-      dict[info['Countries'][i]['CountryCode']] = info['Countries'][i]['TotalConfirmed'];
+      dict[info['Countries'][i]['CountryCode']] = info['Countries'][i]
       // console.log(info);
   }
   // Draw the map
@@ -94,12 +105,11 @@ function ready(error, topo, ohno) {
       })
       .call(d3.helper.tooltip(
         function(d, i){
-          // console.log(d);
-          return "<b>"+ dict[data.get(d.id)]+ "</b>";
+          return "<b>" + dict[data.get(d.id)]['Country'] + "</b>";
         }
         ));
       svg.insert("path")
           .datum(topojson.mesh(topo.features, function(a, b) { return a.id !== b.id; }))
           .attr("class", "boundary")
           .attr("d", path);
-    }
+}

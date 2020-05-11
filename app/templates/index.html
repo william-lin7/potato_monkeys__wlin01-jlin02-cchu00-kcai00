@@ -5,23 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COV-19 in the World</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+    </style>
 </head>
-<body>
-
+<body class="m-3">
+    <h2 class="text-center">COV-19 in the World</h2>
     <div class='text-center'>
-        <svg id='worldmap' width='800' height='500'></svg>
+        <svg id='worldmap' width='800' height='450'></svg>
+    </div>
+
+    <div class='container'>
+        <table class='table table-striped' id='countrytable'>
+            <tr>
+                <th id='countryname' colspan='2'></th>
+            </tr>
+            <tr>
+                <td>New Confirmed Cases:</td>
+                <td id='newcases'></td>
+            </tr>
+            <tr>
+                <td>Total Confirmed Cases:</td>
+                <td id='totalcases'></td>
+            </tr>
+            <tr>
+                <td>New Deaths:</td>
+                <td id='newdeaths'></td>
+            </tr>
+            <tr>
+                <td>Total Deaths:</td>
+                <td id='totaldeaths'></td>
+            </tr>
+            <tr>
+                <td>New Recovered:</td>
+                <td id='newrecovered'></td>
+            </tr>
+            <tr>
+                <td>Total Recovered:</td>
+                <td id='totalrecovered'></td>
+            </tr>
+        </table>
     </div>
 
 </body>
 
 <script src="https://d3js.org/d3.v4.js"></script>
+<script src="//d3js.org/queue.v1.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
 <script src="https://d3js.org/topojson.v2.min.js"></script>
-<script type="text/javascript" charset="utf-8">
-  var info = {{ data|safe }};
-</script>
 <script src="tooltip.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var info = {{ data|safe }};
+</script>
 <script type=text/javascript src="{{
     url_for('static', filename='script.js') }}"></script>
 </html>
