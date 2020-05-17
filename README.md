@@ -1,10 +1,12 @@
-# Covid Tingz by potato_monkeys
+# COV-19 in the World by potato_monkeys
 
 ROSTER <br>
 William Lin - Project Manager <br>
 Jeff Lin - API Data Manager, Front-End <br>
 Calvin Chu - D3 Manager <br>
 Kevin Cai - Python Manager <br><br>
+
+Video presentation: https://youtu.be/u8vfaj_xMRg
 
 DESCRIPTION <br>
 A visual representation of the spread of COVID-19 globally. A world map is used for a general representation and when users hover over each country on the map, data on the effects of COVID-19 in that country is shown in the form of a table.
