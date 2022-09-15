@@ -63,7 +63,8 @@ d3.queue()
               var countrydata = dict[data.get(accessor(d, i)[1])];
               // console.log(countrydata);
               if (typeof countrydata !== 'undefined') {
-                for (var i = 3; i < Object.keys(countrydata).length - 6; i++){
+                for (var i = 3; i < Object.keys(countrydata).length - 3; i++){
+                  console.log(i);
                   countrytable.rows[i-2].cells[1].innerHTML = countrydata[Object.keys(countrydata)[i+1]];
                 }
               }
