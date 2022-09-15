@@ -61,7 +61,7 @@ d3.queue()
               var tooltipText = accessor(d, i)[0];
               countrytable.rows[0].cells[0].innerHTML = accessor(d, i)[0];
               var countrydata = dict[data.get(accessor(d, i)[1])];
-              console.log(countrydata);
+              // console.log(countrydata);
               if (typeof countrydata !== 'undefined') {
                 for (var i = 3; i < Object.keys(countrydata).length - 6; i++){
                   countrytable.rows[i-2].cells[1].innerHTML = countrydata[Object.keys(countrydata)[i+1]];
