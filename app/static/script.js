@@ -20,7 +20,9 @@ var projection = d3.geoNaturalEarth()
 var countrytable = document.getElementById('countrytable');
 countrytable.rows[0].cells[0].innerHTML = 'Global';
 var globaldata = info['Global'];
-for (var i = 0; i < Object.keys(globaldata).length; i++){
+// console.log(info)
+// console.log(countrytable.rows)
+for (var i = 0; i < Object.keys(globaldata).length-1; i++){
   // console.log(globaldata[Object.keys(globaldata)[i]]);
   countrytable.rows[i+1].cells[1].innerHTML = globaldata[Object.keys(globaldata)[i]];
 }
@@ -59,10 +61,10 @@ d3.queue()
               var tooltipText = accessor(d, i)[0];
               countrytable.rows[0].cells[0].innerHTML = accessor(d, i)[0];
               var countrydata = dict[data.get(accessor(d, i)[1])];
-              // console.log(countrydata);
+              console.log(countrydata);
               if (typeof countrydata !== 'undefined') {
-                for (var i = 3; i < Object.keys(countrydata).length - 1; i++){
-                  countrytable.rows[i-2].cells[1].innerHTML = countrydata[Object.keys(countrydata)[i]];
+                for (var i = 3; i < Object.keys(countrydata).length - 6; i++){
+                  countrytable.rows[i-2].cells[1].innerHTML = countrydata[Object.keys(countrydata)[i+1]];
                 }
               }
               else {
@@ -83,7 +85,7 @@ d3.queue()
           .on("mouseout", function(d, i){
               // Remove tooltip
               countrytable.rows[0].cells[0].innerHTML = 'Global';
-              for (var i = 0; i < Object.keys(globaldata).length; i++){
+              for (var i = 0; i < Object.keys(globaldata).length-1; i++){
                 countrytable.rows[i+1].cells[1].innerHTML = globaldata[Object.keys(globaldata)[i]];
               }
               tooltipDiv.remove();
